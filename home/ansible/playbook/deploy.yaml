@@ -1,0 +1,27 @@
+- name: Copy files
+  hosts: all
+  tasks:
+    - name: Backup prd
+      ansible.builtin.copy:
+        src: prd
+        dest: ../prd-{{ ansible_date_time.iso8601_basic_short }}
+
+    - name: Composer install
+      composer:
+        command: install
+        working_dir: dev
+      ignore_errors: yes
+
+    - name: Sync source
+      ansible.posix.synchronize:
+        src: /home/ansible/src/
+        dest: prd
+        archive: yes
+        checksum: yes
+        compress: yes
+        delete: yes
+        rsync_opts:
+          - "--verbose"
+          - "--delete-excluded"
+          - "--exclude=.git"
+          - "--exclude=.rsync-filter"

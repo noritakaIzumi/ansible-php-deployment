@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: ansible.Dockerfile
+      args:
+        - PYTHON_IMAGE_TAG=3.10.5-slim-buster
+    tty: true
+    volumes:
+      - ./etc/ansible:/etc/ansible
+      - ./home/ansible/playbook:/home/ansible/playbook
